@@ -1,0 +1,6 @@
+.venv*/
+nodriver_profile/
+.env
+__pycache__/
+logs/
+*.log
