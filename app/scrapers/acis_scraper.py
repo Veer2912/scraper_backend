@@ -285,7 +285,8 @@ async def handle_hcaptcha(page) -> bool:
 
     await asyncio.sleep(2)
 
-    for attempt in range(60):
+    challenge_streak = 0
+    for attempt in range(15):
         try:
             state = await page.evaluate('''
                 (function() {
@@ -307,15 +308,23 @@ async def handle_hcaptcha(page) -> bool:
             if state == 'passed':
                 logger.info("hCaptcha passed silently (no challenge shown).")
                 return True
+
             if state == 'challenge':
-                if attempt == 0:
-                    logger.warning("hCaptcha visual challenge appeared — please solve it manually.")
+                challenge_streak += 1
+                if challenge_streak == 1:
+                    logger.warning("hCaptcha visual challenge appeared — cannot auto-solve, proceeding after short wait.")
+                if challenge_streak >= 3:
+                    logger.info("Challenge persists after %s checks — proceeding to submit.", challenge_streak)
+                    return False
+            else:
+                challenge_streak = 0
+
         except Exception as e:
             logger.warning(f"hCaptcha poll error: {e}")
 
         await asyncio.sleep(2)
 
-    logger.error("hCaptcha not solved within timeout.")
+    logger.info("hCaptcha did not pass within timeout — proceeding anyway.")
     return False
 
 
