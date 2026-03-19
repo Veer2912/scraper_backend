@@ -25,7 +25,7 @@ KEEP_BROWSER_OPEN_SECONDS = int(os.getenv("KEEP_BROWSER_OPEN_SECONDS", "0"))
 SCRAPER_USER_AGENT = os.getenv(
     "SCRAPER_USER_AGENT",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 )
 
 REQUEST_TIMEOUT_SECONDS = int(os.getenv("REQUEST_TIMEOUT_SECONDS", "180"))

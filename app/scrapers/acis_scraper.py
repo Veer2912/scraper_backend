@@ -13,7 +13,6 @@ from nodriver import cdp
 
 from app.config import (
     ACIS_URL,
-    NODRIVER_PROFILE_PATH,
     SCRAPER_HEADLESS,
     KEEP_BROWSER_OPEN_SECONDS,
     SCRAPER_USER_AGENT,
@@ -205,9 +204,6 @@ async def warm_up_mouse(page, seconds: float = 2.0):
         cx, cy = nx, ny
         await asyncio.sleep(random.uniform(0.05, 0.2))
 
-
-def ensure_profile_path() -> None:
-    os.makedirs(NODRIVER_PROFILE_PATH, exist_ok=True)
 
 
 async def handle_cloudflare(page) -> bool:
@@ -641,13 +637,13 @@ async def wait_for_results(page) -> str:
 
 async def scrape_case_data(a_number: str, nationality: str = "INDIA") -> dict:
     logger.info("Starting browser to navigate to: %s", ACIS_URL)
-    ensure_profile_path()
 
+    profile_path = tempfile.mkdtemp(prefix="nodriver_acis_")
     browser = None
 
     try:
         browser_args = [
-            "--window-size=1920,1080",
+            "--window-size=1440,900",
             "--disable-blink-features=AutomationControlled",
             "--disable-infobars",
             "--no-first-run",
@@ -661,7 +657,7 @@ async def scrape_case_data(a_number: str, nationality: str = "INDIA") -> dict:
             browser_args.insert(0, "--headless=new")
 
         browser = await uc.start(
-            user_data_dir=NODRIVER_PROFILE_PATH,
+            user_data_dir=profile_path,
             browser_args=browser_args
         )
 

@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import APIRouter, Header, HTTPException
 
-from app.config import SCRAPER_API_KEY, NODRIVER_PROFILE_PATH, SCRAPER_HEADLESS
+from app.config import SCRAPER_API_KEY, SCRAPER_HEADLESS
 from app.schemas.acis import CaseRequest, CaseResponse, HealthResponse
 from app.services.acis_service import fetch_acis_case
 
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/acis", tags=["ACIS"])
 async def health():
     return {
         "status": "ok",
-        "profile_path": NODRIVER_PROFILE_PATH,
+        "profile_path": "tempfile (fresh per run)",
         "headless": SCRAPER_HEADLESS,
     }
 
